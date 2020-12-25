@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, Dimensions, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Button, Dimensions, SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { log } from 'react-native-reanimated';
@@ -13,7 +13,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { HomeParamList } from '../../Router/ParamList/HomeParamList';
 import { IndexHomeParamList } from '../../Router/ParamList/IndexHomeParamList';
 import { ModalAttendance } from '../../Component/ModalAttendance';
-
+import { ModalLoading } from '../../Component/ModalLoading';
+import * as Location from 'expo-location';
 
 
 interface DateAttendanceProps {
@@ -38,6 +39,9 @@ export const DateAttendance: React.FC<DateAttendanceProps> = ({ navigation, rout
     const { Attend } = useContext(DummyContext)
     const [myData, setMyData] = useState<dates>(null)
     const [visible, setVisible] = useState(false)
+    const [visibleLoading, setVisibleLoading] = useState<boolean>(false)
+    const [location, setLocation] = useState<Location.LocationObject | null>(null);
+    const [loadingModal, setLoadingModal] = useState(true)
     useEffect(() => {
 
         const filterert = Attend.filter((e) => e.month == route.name)
@@ -45,7 +49,46 @@ export const DateAttendance: React.FC<DateAttendanceProps> = ({ navigation, rout
 
     }, [route.name])
 
+    useEffect(() => {
 
+        (async () => {
+            if (route.params) {
+                if (route.params.type == 'poto') {
+                    GetLocation().then(async (e) => {
+                        // console.log(e, 'GetLocation')
+                        if (e) {
+
+                            setVisible(true)
+
+
+                        }
+
+                    }).catch(e => console.log(e)
+                    )
+
+                    // if (GetLocation()) {
+                    // }
+                }
+            }
+        })();
+        // return () => {
+        //     clearTimeout(timeout)
+        // }
+    }, [route.params])
+    // console.log(route, 'Dari Attendance');
+
+    const GetLocation = async () => {
+        let { status } = await Location.requestPermissionsAsync();
+        if (status !== 'granted') {
+            ToastAndroid.showWithGravity(
+                'Permission to access location was denied',
+                ToastAndroid.SHORT,
+                ToastAndroid.BOTTOM
+            );
+            return false
+        }
+        return true
+    }
 
     if (myData === null || myData === undefined) {
         return <View>
@@ -56,6 +99,11 @@ export const DateAttendance: React.FC<DateAttendanceProps> = ({ navigation, rout
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.containerCal}>
+                {/* <View style={styles.boxLoading}>
+                    <Center>
+                        <ActivityIndicator size='large' color='#000' />
+                    </Center>
+                </View> */}
                 {/* <View style={styles.boxCal}>
                 <Calendar />
             </View> */}
@@ -76,7 +124,7 @@ export const DateAttendance: React.FC<DateAttendanceProps> = ({ navigation, rout
                                     <View style={{ ...styles.punch, borderRightWidth: 0 }}>
                                         {/* <Text style={styles.fontPunch}>Punch Out</Text>
                             <Text style={styles.fontTimePunch}>17 : 00</Text> */}
-                                        <TouchableOpacity onPress={() => navigation.navigate('MyModal')} activeOpacity={0.6} style={styles.btnGoPunch}>
+                                        <TouchableOpacity onPress={() => navigation.navigate('MyModal', { prevScreen: route.name })} activeOpacity={0.6} style={styles.btnGoPunch}>
                                             <View>
 
                                                 <Text style={styles.fontBtn}>Go Punch</Text>
@@ -132,8 +180,10 @@ export const DateAttendance: React.FC<DateAttendanceProps> = ({ navigation, rout
                     <YesterdayDate /> */}
                     </ScrollView>
                 </View>
-                <ModalAttendance visible={visible} setVisible={setVisible} />
+                <ModalAttendance loadingModal={loadingModal} setLoadingModal={setLoadingModal} visible={visible} setVisible={setVisible} />
+                <ModalLoading visibleLoading={visibleLoading} setVisibleLoading={setVisibleLoading} />
             </View>
+
         </SafeAreaView>
 
     );
@@ -262,5 +312,14 @@ const styles = StyleSheet.create({
     },
     fontBtn: {
         color: 'white'
+    },
+    boxLoading: {
+        backgroundColor: 'rgba(0, 0, 0, 0.255)',
+        position: 'absolute',
+        flex: 1,
+        width: width,
+        height: height,
+        zIndex: 2
+
     }
 })

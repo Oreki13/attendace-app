@@ -21,7 +21,7 @@ export const HeaderAttendance: React.FC<HeaderAttendanceProps> = ({ navigation }
 
 
     return (
-        <SafeAreaView style={{ paddingTop: StatusBar.currentHeight, backgroundColor: '#874469' }}>
+        <SafeAreaView style={{ paddingTop: 15, backgroundColor: '#874469' }}>
             <StatusBar backgroundColor='#874469' barStyle='default' />
             <View style={styles.container}>
                 <View style={styles.boxArrow}>
