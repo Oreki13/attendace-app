@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Button, Dimensions, Modal, StyleSheet, Text, View, TouchableOpacity, ToastAndroid, ActivityIndicator } from 'react-native';
 import * as Location from 'expo-location';
 import { Center } from './Center';
+import * as geolib from 'geolib';
+
 
 interface ModalAttendanceProps {
     visible: boolean,
@@ -19,36 +21,69 @@ export const ModalAttendance: React.FC<ModalAttendanceProps> = ({ visible, setVi
     const [hasPermission, setHasPermmision] = useState<any | null>(null)
     const [loadingGet, setLoadingGet] = useState<boolean>(true)
     const [geoCode, setGeoCode] = useState<Location.LocationGeocodedAddress | null>(null)
+    const [geoCodeOffice, setGeoCodeOffice] = useState<Location.LocationGeocodedAddress | null>(null)
+    const [distance, setDistance] = useState<number | null>(null)
 
+    const officeLoc = {
+        latitude: -3.4008726,
+        logtitude: 104.2750363
+    }
     useEffect(() => {
         (async () => {
             if (visible) {
-                let location = await Location.getCurrentPositionAsync({});
-                console.log(location, "asdasdwaW");
-                setLocation(location);
+                Location.hasServicesEnabledAsync().then(async (resPerm) => {
+                    console.log(resPerm);
+
+                    if (resPerm) {
+                        let theLocation = await Location.getCurrentPositionAsync({ accuracy: Location.LocationAccuracy.High });
+                        setLocation(theLocation);
+                        if (theLocation) {
+                            // console.log(theLocation, "Get LatLong");
+                            let geocode = await Location.reverseGeocodeAsync({ latitude: theLocation.coords.latitude, longitude: theLocation.coords.longitude })
+                            let geocodeOffice = await Location.reverseGeocodeAsync({ latitude: officeLoc.latitude, longitude: officeLoc.logtitude })
+                            if (geocode && geocodeOffice) {
+                                // console.log(geocode, "ANJAYE");
+                                // console.log(geocodeOffice, "ANJAYEOfi");
+                                setGeoCodeOffice(geocodeOffice[0])
+                                setGeoCode(geocode[0])
+                                setLoadingModal(false)
+                                setDistance(
+                                    geolib.getDistance(
+                                        { latitude: theLocation.coords.latitude, longitude: theLocation.coords.longitude },
+                                        { latitude: officeLoc.latitude, longitude: officeLoc.logtitude }
+                                    )
+
+                                );
+
+                            }
+                        }
+
+                    } else {
+                        setVisible(false)
+                        ToastAndroid.showWithGravity(
+                            'Need Permission to access location',
+                            ToastAndroid.SHORT,
+                            ToastAndroid.BOTTOM
+                        );
+                    }
+                }).catch(e => console.log(e))
             }
         })();
+        return () => {
+            setGeoCode(null)
+            setLocation(null)
+            setGeoCodeOffice(null)
+            setDistance(null)
+        }
     }, [visible]);
 
-    useEffect(() => {
-        (async () => {
-            if (location) {
-                let geocode = await Location.reverseGeocodeAsync({ latitude: location.coords.latitude, longitude: location.coords.longitude })
-                if (geoCode) {
-
-                    console.log(geocode, "ANJAYE");
-                    setGeoCode(geoCode)
-                    setLoadingModal(false)
-                    console.log(geoCode[0].street);
-                }
-            }
-        })();
-    }, [location])
+    // console.log(!location, 'tesLoc');
+    // console.log(!geoCode, 'tesGeo');
 
     return (
         <Modal animationType='fade' visible={visible} transparent={true} statusBarTranslucent={true} hardwareAccelerated={true} >
             <View style={styles.container}>
-                {loadingModal && !location && !geoCode ?
+                {loadingModal || !location || !geoCode || !geoCodeOffice ?
                     <ActivityIndicator size='large' color='purpel' />
                     :
                     <>
@@ -56,27 +91,55 @@ export const ModalAttendance: React.FC<ModalAttendanceProps> = ({ visible, setVi
                             <View style={styles.boxLocation}>
                                 <View>
                                     <Text style={styles.fontTitleLocation}>Your Location</Text>
-                                    <Text style={styles.fontSubLocation}>{geoCode?.street}</Text>
+                                    <Text style={styles.fontSubLocation}>{geoCode.city}, {geoCode.street}</Text>
                                 </View>
+
+                            </View>
+                            <View style={styles.boxOffice}>
                                 <View>
                                     <Text style={styles.fontTitleLocation}>Office Location</Text>
-                                    <Text style={styles.fontSubLocation}>Jalan Kantor</Text>
+                                    <Text style={styles.fontSubLocation}>{geoCodeOffice.city}, {geoCodeOffice.street}</Text>
                                 </View>
                             </View>
                             <View style={styles.boxInfo}>
                                 <View>
-                                    <Text style={styles.fontTitleInfo}>Information</Text>
-                                    <Text style={styles.fontSubInfo}>Your is Out of Range</Text>
+                                    <Text style={styles.fontTitleInfo}>
+                                        Your Distance</Text>
+                                    <Text style={styles.fontSubInfo}>{distance} Meter</Text>
                                 </View>
                                 <View>
-                                    <TouchableOpacity style={styles.boxBtnPunchIn}>
+                                    <Text style={styles.fontTitleInfo}>
+                                        Min Distance</Text>
+                                    <Text style={styles.fontSubInfo}>500 Meter</Text>
+                                </View>
+
+                            </View>
+                            <View style={styles.boxBtn}>
+
+
+                                <View>
+                                    <TouchableOpacity activeOpacity={0.6} onPress={() => setVisible(false)} style={styles.boxBtnClose}>
                                         <View>
-                                            <Text style={styles.fontBtnPunchIn}>Punch In</Text>
+                                            <Text style={styles.fontBtnClose}>Close</Text>
                                         </View>
                                     </TouchableOpacity>
                                 </View>
+                                <View>
+                                    {distance < 500 ?
+                                        <TouchableOpacity activeOpacity={0.6} style={styles.boxBtnPunchIn}>
+                                            <View>
+                                                <Text style={styles.fontBtnPunchIn}>Punch In</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                        :
+                                        <TouchableOpacity activeOpacity={1} style={styles.boxBtnPunchInOut}>
+                                            <View>
+                                                <Text style={styles.fontBtnPunchIn}>Out Of Range</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    }
+                                </View>
                             </View>
-                            <Button title='close' onPress={() => setVisible(false)} />
                         </View>
                     </>
                 }
@@ -115,38 +178,83 @@ const styles = StyleSheet.create({
     },
     boxLocation: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'flex-start',
         backgroundColor: '#e5e5e5',
-        width: '100%'
+        width: '100%',
+        padding: 8,
+        borderRadius: 5
+    },
+    boxOffice: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        backgroundColor: '#e5e5e5',
+        width: '100%',
+        marginTop: 10,
+        padding: 8,
+        borderRadius: 5
     },
     boxInfo: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: '#e5e5e5',
         width: '100%',
-        marginVertical: 10
+        marginVertical: 10,
+        padding: 8,
+        borderRadius: 5
     },
     fontTitleLocation: {
-        fontSize: width / 22
+        fontSize: width / 22,
+        fontWeight: '700'
     },
     fontSubLocation: {
         fontSize: width / 25
     },
     fontTitleInfo: {
-        fontSize: width / 22
+        fontSize: width / 22,
+        fontWeight: '700'
     },
     fontSubInfo: {
-        fontSize: width / 25
+        fontSize: width / 25,
+        textAlign: 'center'
     },
     boxBtnPunchIn: {
-        backgroundColor: 'purple',
+        backgroundColor: '#874469',
         padding: 10,
-        borderRadius: 10
+        borderRadius: 5,
+        width: width / 3,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    boxBtnPunchInOut: {
+        backgroundColor: '#77395b',
+        padding: 10,
+        borderRadius: 5,
+        width: width / 3,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    boxBtnClose: {
+        backgroundColor: 'rgba(232, 134, 43, 0.94)',
+        padding: 10,
+        borderRadius: 5,
+        width: width / 3,
+        justifyContent: 'center',
+        alignItems: "center"
     },
     fontBtnPunchIn: {
         fontSize: width / 24,
         color: 'white'
+    },
+    fontBtnClose: {
+        fontSize: width / 24,
+        color: 'rgb(255, 255, 255)'
+    },
+    boxBtn: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '100%',
+        marginVertical: 5
     }
 
 
