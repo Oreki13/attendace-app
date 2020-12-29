@@ -11,6 +11,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { DummyContext } from '../../Context/DummyData';
 import { HeaderHome } from '../../Component/HeaderHome';
+import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
 
 
 
@@ -28,6 +29,8 @@ export const IndexHome: React.FC<IndexHomeProps> = ({ navigation }: HomeStackNav
     const [blured, setBlured] = useState(false)
     const fadeAnimation = useRef<Animated.Value>(new Animated.Value(0)).current
     const { MenuData } = useContext(DummyContext)
+    console.log(moderateScale(30, 1), "Hasil scale");
+
     const fadeIn = async () => {
         Animated.timing(fadeAnimation, {
             toValue: 1,
@@ -117,7 +120,7 @@ const styles = StyleSheet.create({
         // marginHorizontal: 20,
         backgroundColor: '#f5f5f5',
         // backgroundColor: '#000',
-        paddingTop: 10,
+        paddingTop: moderateScale(1),
 
         justifyContent: 'center',
         borderTopLeftRadius: 25,
@@ -131,16 +134,13 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         // backgroundColor: '#f5f5f5',
         // width: width,
-        paddingHorizontal: 25,
-        paddingBottom: 15,
+        paddingHorizontal: moderateScale(25),
+        paddingBottom: moderateScale(15),
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
 
     },
     lineBlur: {
-
-
-
         height: 45,
         width: '100%',
         borderTopLeftRadius: 20,
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     },
     animateBox: {
         position: 'absolute',
-        top: height / 4.6,
+        top: verticalScale(142),
         left: '1%',
         width: '98%',
         zIndex: 2,

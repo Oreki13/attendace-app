@@ -11,15 +11,16 @@ import { AttendanceParamList } from '../../Router/ParamList/AttendanceParamList'
 import moment from 'moment'
 import { StackNavigationProp } from '@react-navigation/stack';
 import { HomeParamList } from '../../Router/ParamList/HomeParamList';
-import { IndexHomeParamList } from '../../Router/ParamList/IndexHomeParamList';
+import { IndexHomeParamList, RootStackIndexParamList } from '../../Router/ParamList/IndexHomeParamList';
 import { ModalAttendance } from '../../Component/ModalAttendance';
 import { ModalLoading } from '../../Component/ModalLoading';
 import * as Location from 'expo-location';
+import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
 
 
 interface DateAttendanceProps {
-    route: RouteProp<HomeParamList, 'Date'>
-    navigation: StackNavigationProp<HomeParamList, 'Date'>
+    route: RouteProp<AttendanceParamList, 'December'>
+    navigation: StackNavigationProp<RootStackIndexParamList, 'Dashboard'>
 }
 type dates = {
     today: {
@@ -42,6 +43,7 @@ export const DateAttendance: React.FC<DateAttendanceProps> = ({ navigation, rout
     const [visibleLoading, setVisibleLoading] = useState<boolean>(false)
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [loadingModal, setLoadingModal] = useState(true)
+    const [modePunch, setModePunch] = useState<string | null>(null)
     useEffect(() => {
 
         const filterert = Attend.filter((e) => e.month == route.name)
@@ -96,6 +98,16 @@ export const DateAttendance: React.FC<DateAttendanceProps> = ({ navigation, rout
         </View>
     }
 
+    const handelPunchIn = () => {
+        navigation.navigate('CameraModal', { prevScreen: route.name })
+        setModePunch('punchIn')
+    }
+
+    const handelPunchOut = () => {
+        navigation.navigate('CameraModal', { prevScreen: route.name })
+        setModePunch('punchOut')
+    }
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.containerCal}>
@@ -124,11 +136,9 @@ export const DateAttendance: React.FC<DateAttendanceProps> = ({ navigation, rout
                                     <View style={{ ...styles.punch, borderRightWidth: 0 }}>
                                         {/* <Text style={styles.fontPunch}>Punch Out</Text>
                             <Text style={styles.fontTimePunch}>17 : 00</Text> */}
-                                        <TouchableOpacity onPress={() => navigation.navigate('MyModal', { prevScreen: route.name })} activeOpacity={0.6} style={styles.btnGoPunch}>
+                                        <TouchableOpacity onPress={() => handelPunchIn()} activeOpacity={0.6} style={styles.btnGoPunch}>
                                             <View>
-
                                                 <Text style={styles.fontBtn}>Go Punch</Text>
-
                                             </View>
                                         </TouchableOpacity>
                                     </View>
@@ -143,7 +153,7 @@ export const DateAttendance: React.FC<DateAttendanceProps> = ({ navigation, rout
                                     <View style={{ ...styles.punch, borderRightWidth: 0 }}>
 
                                         {myData?.today.punchOut === null ?
-                                            <TouchableOpacity activeOpacity={0.6} onPress={() => setVisible(true)} style={styles.btnGoPunch}>
+                                            <TouchableOpacity activeOpacity={0.6} onPress={() => handelPunchOut()} style={styles.btnGoPunch}>
                                                 <View>
                                                     <Text style={styles.fontBtn}>Go Punch Out</Text>
                                                 </View>
@@ -167,7 +177,7 @@ export const DateAttendance: React.FC<DateAttendanceProps> = ({ navigation, rout
                 <View style={styles.boxYesterday}>
 
                     <Text style={styles.fontYesterday}>Yesterday</Text>
-                    <ScrollView>
+                    <ScrollView showsVerticalScrollIndicator={false}>
                         {myData.yesterday.map((data, idx) => {
                             return (
 
@@ -180,7 +190,7 @@ export const DateAttendance: React.FC<DateAttendanceProps> = ({ navigation, rout
                     <YesterdayDate /> */}
                     </ScrollView>
                 </View>
-                <ModalAttendance loadingModal={loadingModal} setLoadingModal={setLoadingModal} visible={visible} setVisible={setVisible} />
+                <ModalAttendance modePunch={modePunch} setModePunch={setModePunch} loadingModal={loadingModal} setLoadingModal={setLoadingModal} visible={visible} setVisible={setVisible} />
                 <ModalLoading visibleLoading={visibleLoading} setVisibleLoading={setVisibleLoading} />
             </View>
 
@@ -200,36 +210,34 @@ const styles = StyleSheet.create({
         // borderBottomRightRadius: 10
     },
     boxCal: {
-        marginTop: 10,
-        padding: 10,
-        marginHorizontal: 10,
+        marginTop: moderateScale(10),
+        padding: moderateScale(10),
+        marginHorizontal: moderateScale(10),
         backgroundColor: '#fff',
         borderRadius: 10
     },
     bgColor: {
         backgroundColor: '#874469',
         position: 'absolute',
-        height: height / 10,
+        height: verticalScale(65),
         width: width
     },
     boxPunch: {
         // position: 'relative',
         // backgroundColor: 'grey',
-        marginTop: width / 15,
+        marginTop: scale(20),
         justifyContent: 'center',
         alignItems: 'center',
-
-
     },
     boxInPunch: {
         justifyContent: 'space-around',
         alignItems: 'center',
         flexDirection: 'column',
         backgroundColor: '#fff',
-        width: width / 1.4,
+        width: scale(240),
         borderRadius: 10,
-        height: height / 8,
-        padding: 10,
+        height: verticalScale(85),
+        padding: moderateScale(10),
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -237,14 +245,15 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.20,
         shadowRadius: 1.41,
-
         elevation: 2,
     },
     boxTitle: {
-        paddingBottom: 10
+        paddingBottom: moderateScale(10)
     },
     fontTitle: {
-        fontSize: width / 20
+        fontSize: moderateScale(19),
+        fontWeight: '700',
+
     },
     containerPunch: {
         flexDirection: 'row'
@@ -252,44 +261,43 @@ const styles = StyleSheet.create({
     punch: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingBottom: 10,
+        paddingBottom: moderateScale(10),
         // paddingRight: 12,
         borderRightColor: '#e5e5e5e5',
         borderRightWidth: 1,
         // backgroundColor: 'green',
-        width: width / 3,
-        paddingHorizontal: 5
+        width: scale(120),
+        paddingHorizontal: moderateScale(5)
     },
     fontPunch: {
-        fontSize: width / 25,
+        fontSize: moderateScale(16),
         textAlign: 'center'
     },
     fontTimePunch: {
-        fontSize: width / 28,
+        fontSize: moderateScale(14),
         fontWeight: '700'
     },
     boxToday: {
-        marginTop: 10,
+        marginTop: moderateScale(10),
         backgroundColor: '#fff',
-        marginHorizontal: 10,
-        borderRadius: 10,
+        marginHorizontal: moderateScale(10),
+        borderRadius: moderateScale(10),
 
     },
     fontToday: {
-        fontSize: width / 17
+        fontSize: moderateScale(16)
     },
     boxYesterday: {
 
-        marginTop: 20,
-        marginBottom: 10,
-        padding: 10,
+        marginTop: moderateScale(20),
+        marginBottom: moderateScale(10),
+        padding: moderateScale(10),
         backgroundColor: '#fff',
-        marginHorizontal: 10,
+        marginHorizontal: moderateScale(12),
         borderRadius: 10,
         // height: height / 1.66,
         // height: '60%',
         flex: 1,
-
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -297,21 +305,22 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.20,
         shadowRadius: 1.41,
-
         elevation: 2,
     },
     fontYesterday: {
-        fontSize: width / 18,
+        fontSize: moderateScale(19),
         textAlign: 'center',
-        marginBottom: 5
+        marginBottom: moderateScale(10),
+        fontWeight: '700'
     },
     btnGoPunch: {
         backgroundColor: '#874469',
-        padding: 10,
+        padding: moderateScale(10),
         borderRadius: 5
     },
     fontBtn: {
-        color: 'white'
+        color: 'white',
+        fontSize: moderateScale(14)
     },
     boxLoading: {
         backgroundColor: 'rgba(0, 0, 0, 0.255)',

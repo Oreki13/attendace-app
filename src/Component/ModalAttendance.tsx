@@ -3,19 +3,22 @@ import { Button, Dimensions, Modal, StyleSheet, Text, View, TouchableOpacity, To
 import * as Location from 'expo-location';
 import { Center } from './Center';
 import * as geolib from 'geolib';
-
+import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
+import { Ionicons } from '@expo/vector-icons';
 
 interface ModalAttendanceProps {
     visible: boolean,
     setVisible: React.Dispatch<React.SetStateAction<boolean>>
     loadingModal: boolean,
     setLoadingModal: React.Dispatch<React.SetStateAction<boolean>>
+    setModePunch: React.Dispatch<React.SetStateAction<string | null>>
+    modePunch: string | null
 
 }
 
 const { width, height } = Dimensions.get('window')
 
-export const ModalAttendance: React.FC<ModalAttendanceProps> = ({ visible, setVisible, loadingModal, setLoadingModal }) => {
+export const ModalAttendance: React.FC<ModalAttendanceProps> = ({ visible, setVisible, loadingModal, setLoadingModal, modePunch, setModePunch }) => {
     const [errorMsg, setErrorMsg] = useState<any | null>(null)
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [hasPermission, setHasPermmision] = useState<any | null>(null)
@@ -77,6 +80,12 @@ export const ModalAttendance: React.FC<ModalAttendanceProps> = ({ visible, setVi
         }
     }, [visible]);
 
+    const sendPunchIn = () => {
+        const mydata = {
+
+        }
+    }
+
     // console.log(!location, 'tesLoc');
     // console.log(!geoCode, 'tesGeo');
 
@@ -107,6 +116,10 @@ export const ModalAttendance: React.FC<ModalAttendanceProps> = ({ visible, setVi
                                         Your Distance</Text>
                                     <Text style={styles.fontSubInfo}>{distance} Meter</Text>
                                 </View>
+                                {/* <View>
+                                    <Ionicons name="ios-refresh-sharp" size={24} color="black" />
+                                    <Text>Refresh</Text>
+                                </View> */}
                                 <View>
                                     <Text style={styles.fontTitleInfo}>
                                         Min Distance</Text>
@@ -125,18 +138,25 @@ export const ModalAttendance: React.FC<ModalAttendanceProps> = ({ visible, setVi
                                     </TouchableOpacity>
                                 </View>
                                 <View>
-                                    {distance < 500 ?
-                                        <TouchableOpacity activeOpacity={0.6} style={styles.boxBtnPunchIn}>
-                                            <View>
-                                                <Text style={styles.fontBtnPunchIn}>Punch In</Text>
-                                            </View>
-                                        </TouchableOpacity>
+                                    {distance !== null ?
+                                        <>
+
+                                            {distance < 500 ?
+                                                <TouchableOpacity activeOpacity={0.6} style={styles.boxBtnPunchIn}>
+                                                    <View>
+                                                        <Text style={styles.fontBtnPunchIn}>{modePunch === 'punchIn' ? 'Punch In' : 'Punch Out'}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                                :
+                                                <TouchableOpacity activeOpacity={1} style={styles.boxBtnPunchInOut}>
+                                                    <View>
+                                                        <Text style={styles.fontBtnPunchIn}>Out Of Range</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
+                                        </>
                                         :
-                                        <TouchableOpacity activeOpacity={1} style={styles.boxBtnPunchInOut}>
-                                            <View>
-                                                <Text style={styles.fontBtnPunchIn}>Out Of Range</Text>
-                                            </View>
-                                        </TouchableOpacity>
+                                        <ActivityIndicator size='large' color='black' />
                                     }
                                 </View>
                             </View>
@@ -163,9 +183,9 @@ const styles = StyleSheet.create({
     modalView: {
         // margin: 20,
         backgroundColor: "white",
-        borderRadius: 10,
-        padding: 10,
-        width: width / 1.1,
+        borderRadius: moderateScale(10),
+        padding: moderateScale(10),
+        width: scale(310),
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
@@ -181,17 +201,17 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         backgroundColor: '#e5e5e5',
         width: '100%',
-        padding: 8,
-        borderRadius: 5
+        padding: moderateScale(10),
+        borderRadius: moderateScale(5)
     },
     boxOffice: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
         backgroundColor: '#e5e5e5',
         width: '100%',
-        marginTop: 10,
-        padding: 8,
-        borderRadius: 5
+        marginTop: moderateScale(10),
+        padding: moderateScale(10),
+        borderRadius: moderateScale(5)
     },
     boxInfo: {
         flexDirection: 'row',
@@ -199,62 +219,62 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#e5e5e5',
         width: '100%',
-        marginVertical: 10,
-        padding: 8,
-        borderRadius: 5
+        marginVertical: moderateScale(10),
+        padding: moderateScale(10),
+        borderRadius: moderateScale(5)
     },
     fontTitleLocation: {
-        fontSize: width / 22,
+        fontSize: moderateScale(18),
         fontWeight: '700'
     },
     fontSubLocation: {
-        fontSize: width / 25
+        fontSize: moderateScale(15)
     },
     fontTitleInfo: {
-        fontSize: width / 22,
+        fontSize: moderateScale(16),
         fontWeight: '700'
     },
     fontSubInfo: {
-        fontSize: width / 25,
+        fontSize: moderateScale(15),
         textAlign: 'center'
     },
     boxBtnPunchIn: {
         backgroundColor: '#874469',
-        padding: 10,
-        borderRadius: 5,
-        width: width / 3,
+        padding: moderateScale(10),
+        borderRadius: moderateScale(5),
+        width: scale(130),
         justifyContent: 'center',
         alignItems: 'center'
     },
     boxBtnPunchInOut: {
         backgroundColor: '#77395b',
-        padding: 10,
-        borderRadius: 5,
-        width: width / 3,
+        padding: moderateScale(10),
+        borderRadius: moderateScale(5),
+        width: scale(130),
         justifyContent: 'center',
         alignItems: 'center'
     },
     boxBtnClose: {
         backgroundColor: 'rgba(232, 134, 43, 0.94)',
-        padding: 10,
-        borderRadius: 5,
-        width: width / 3,
+        padding: moderateScale(10),
+        borderRadius: moderateScale(5),
+        width: scale(130),
         justifyContent: 'center',
         alignItems: "center"
     },
     fontBtnPunchIn: {
-        fontSize: width / 24,
+        fontSize: moderateScale(16),
         color: 'white'
     },
     fontBtnClose: {
-        fontSize: width / 24,
+        fontSize: moderateScale(16),
         color: 'rgb(255, 255, 255)'
     },
     boxBtn: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         width: '100%',
-        marginVertical: 5
+        marginVertical: moderateScale(5)
     }
 
 

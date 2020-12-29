@@ -5,6 +5,7 @@ import { Dimensions, StyleSheet, Text, View, TouchableHighlight, TouchableOpacit
 import { AttendanceStackNavProp } from '../Router/ParamList/AttendanceParamList';
 import { HomeParamList, HomeStackNavProp } from '../Router/ParamList/HomeParamList';
 import moment from 'moment'
+import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
 
 interface CardHomeProps {
     // children: () => JSX.Element
@@ -46,7 +47,7 @@ export const CardHome: React.FC<CardHomeProps> = ({ title, icon, badge, linkTo, 
                 }
                 <View style={styles.boxIcon}>{icon()}</View>
                 <View style={styles.boxText}>
-                    <Text>{title}</Text>
+                    <Text style={styles.fontTitle}>{title}</Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -99,6 +100,9 @@ const styles = StyleSheet.create({
     },
     fontNotif: {
         color: '#000',
-        fontSize: 12
+        fontSize: moderateScale(13)
+    },
+    fontTitle: {
+        fontSize: moderateScale(13)
     }
 })

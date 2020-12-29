@@ -3,18 +3,54 @@ import { StackNavigationProp } from "@react-navigation/stack"
 
 export type AttendanceParamList = {
 
-    January: undefined;
-    February: undefined;
-    March: undefined;
-    April: undefined;
-    Mey: undefined;
-    June: undefined;
-    July: undefined;
-    August: undefined;
-    September: undefined;
-    October: undefined;
-    November: undefined;
-    December: undefined;
+    January: {
+        type: string | null,
+        data: object | null
+    } | undefined;
+    February: {
+        type: string | null,
+        data: object | null
+    } | undefined;
+    March: {
+        type: string | null,
+        data: object | null
+    } | undefined;
+    April: {
+        type: string | null,
+        data: object | null
+    } | undefined;
+    Mey: {
+        type: string | null,
+        data: object | null
+    } | undefined;
+    June: {
+        type: string | null,
+        data: object | null
+    } | undefined;
+    July: {
+        type: string | null,
+        data: object | null
+    } | undefined;
+    August: {
+        type: string | null,
+        data: object | null
+    } | undefined;
+    September: {
+        type: string | null,
+        data: object | null
+    } | undefined;
+    October: {
+        type: string | null,
+        data: object | null
+    } | undefined;
+    November: {
+        type: string | null,
+        data: object | null
+    } | undefined;
+    December: {
+        type: string | null,
+        data: object | null
+    } | undefined;
 }
 
 export type AttendanceStackNavProp<T extends keyof AttendanceParamList> = {

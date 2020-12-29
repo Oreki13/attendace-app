@@ -1,11 +1,17 @@
 import { Ionicons } from '@expo/vector-icons';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { Camera, CameraCapturedPicture } from 'expo-camera';
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Dimensions, Image, ImageBackground, PermissionStatus, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { AttendanceParamList } from '../Router/ParamList/AttendanceParamList';
+import { RootStackIndexParamList } from '../Router/ParamList/IndexHomeParamList';
 import { Center } from './Center';
 
 interface CameraProps {
+    navigation: StackNavigationProp<AttendanceParamList, 'December'>
+    route: RouteProp<RootStackIndexParamList, 'CameraModal'>
 
 }
 const { width, height } = Dimensions.get('window')
@@ -95,6 +101,11 @@ export const CameraHome: React.FC<CameraProps> = ({ navigation, route }) => {
                 </>
             )
         }
+        return (
+            <View>
+                <ActivityIndicator size='large' color='black' />
+            </View>
+        )
     }
 
     if (hasPermission === null) {

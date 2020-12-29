@@ -1,7 +1,8 @@
 import { FontAwesome5 } from '@expo/vector-icons';
-import React, { useContext } from 'react'
-import { Dimensions, SafeAreaView, StyleSheet, Text, View, StatusBar } from 'react-native';
+import React, { useContext } from 'react';
+import { Dimensions, SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { AuthContext } from '../Context/AuthProvider';
 
 interface HeaderHomeProps {
@@ -21,7 +22,7 @@ export const HeaderHome: React.FC<HeaderHomeProps> = ({ }) => {
                     </View>
                     <View>
                         <TouchableOpacity onPress={() => logout()}>
-                            <FontAwesome5 name="user-circle" size={24} color="white" />
+                            <FontAwesome5 name="user-circle" size={moderateScale(26)} color="white" />
 
                         </TouchableOpacity>
                     </View>
@@ -34,20 +35,20 @@ export const HeaderHome: React.FC<HeaderHomeProps> = ({ }) => {
 const styles = StyleSheet.create({
     boxHeader: {
         flexDirection: 'row',
-        height: height / 6.5,
+        height: verticalScale(95),
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 25,
-        paddingTop: StatusBar.currentHeight,
+        paddingTop: moderateScale(12),
         backgroundColor: '#874469',
 
     },
     textWlcb: {
-        fontSize: 14,
+        fontSize: moderateScale(14),
         color: '#fff'
     },
     textName: {
-        fontSize: width / 15,
+        fontSize: moderateScale(22, 2),
         fontWeight: '700',
         color: '#fff'
     }

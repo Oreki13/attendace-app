@@ -1,6 +1,7 @@
 import { FontAwesome } from '@expo/vector-icons';
-import React from 'react'
-import { CheckBox, Dimensions, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 
 interface DetailHomeProps {
 
@@ -59,15 +60,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: width,
         backgroundColor: 'transparent',
-        marginTop: 18
+        marginTop: moderateScale(12)
     },
     boxDetail: {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 10,
-        width: width / 1.14,
-        height: height / 6,
+        margin: moderateScale(10),
+        width: scale(306),
+        height: verticalScale(115),
         backgroundColor: '#fff',
         shadowColor: "#000",
         shadowOffset: {
@@ -83,41 +84,41 @@ const styles = StyleSheet.create({
 
     },
     boxTextDetail: {
-        marginTop: 4
+        marginTop: moderateScale(4)
     },
     TextDetail: {
-        fontSize: 15
+        fontSize: moderateScale(16)
     },
     boxIsi: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         width: '100%',
-        marginTop: 15
+        marginTop: moderateScale(15)
     },
     boxSolo: {
-        marginTop: 3,
+        marginTop: moderateScale(3),
         justifyContent: 'center',
         alignItems: 'center',
         borderRightColor: 'rgba(199, 199, 199, 0.713);',
         borderRightWidth: 1,
         // padding: 10,
-        width: width / 3.9,
+        width: scale(100),
         // backgroundColor: 'grey'
     },
     boxIcon: {
-        marginBottom: 2
+        marginBottom: moderateScale(2)
     },
     boxKet: {
-        marginBottom: 3
+        marginBottom: moderateScale(3)
     },
     boxTot: {
-        marginBottom: 10
+        marginBottom: moderateScale(10)
     },
     fontKet: {
-        fontSize: 14
+        fontSize: moderateScale(13)
     },
     fontTot: {
-        fontSize: 13,
+        fontSize: moderateScale(12),
         fontWeight: '700'
     }
 })
