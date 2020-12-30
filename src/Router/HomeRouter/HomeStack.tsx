@@ -15,6 +15,8 @@ import { RouteProp } from '@react-navigation/native';
 import { MapsScreen } from '../../Screen/Home/MapsScreen';
 import { AppTab } from './AppTab';
 import { CommingSoon } from '../../Screen/Home/CommingSoon';
+import { LeaveScreen } from '../../Screen/Home/LeaveScreen';
+import { HeaderLeave } from '../../Component/HeaderLeave';
 
 interface HomeStackProps {
     navigation: StackNavigationProp<HomeParamList, 'Date'>
@@ -79,7 +81,7 @@ export const HomeStack: React.FC<HomeStackProps> = ({ navigation }) => {
             }} name='Date' component={AttendentStack} />
             <Stack.Screen name="Notification" component={CommingSoon} />
             <Stack.Screen name="Request" component={CommingSoon} />
-            <Stack.Screen name="Leave" component={CommingSoon} />
+            <Stack.Screen options={{ header: () => <HeaderLeave navigation={navigation} /> }} name="Leave" component={LeaveScreen} />
             <Stack.Screen name="PaySlip" component={CommingSoon} />
             <Stack.Screen name="Report" component={CommingSoon} />
             {/* <Stack.Screen name='Maps' component={MapsScreen} /> */}

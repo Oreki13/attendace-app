@@ -60,7 +60,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: width,
         backgroundColor: 'transparent',
-        marginTop: moderateScale(12)
+        marginTop: moderateScale(12),
+
+
     },
     boxDetail: {
         flexDirection: 'column',
@@ -68,7 +70,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         margin: moderateScale(10),
         width: scale(306),
-        height: verticalScale(115),
+
+        height: verticalScale(125),
         backgroundColor: '#fff',
         shadowColor: "#000",
         shadowOffset: {
@@ -77,23 +80,25 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.20,
         shadowRadius: 1.41,
-
         elevation: 2,
-        borderRadius: 10
+
+        borderRadius: moderateScale(10)
         // zIndex: -1
 
     },
     boxTextDetail: {
-        marginTop: moderateScale(4)
+        paddingTop: moderateScale(8),
+        // backgroundColor: 'pink'
     },
     TextDetail: {
-        fontSize: moderateScale(16)
+        fontSize: moderateScale(16),
+
     },
     boxIsi: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         width: '100%',
-        marginTop: moderateScale(15)
+        marginTop: moderateScale(10)
     },
     boxSolo: {
         marginTop: moderateScale(3),
