@@ -70,17 +70,22 @@ export const IndexHome: React.FC<IndexHomeProps> = ({ navigation }: HomeStackNav
 
                         {/* <View style={styles.lineBlur}></View> */}
                         {/* {blured ? */}
-                        <Animated.View style={{ ...styles.animateBox, opacity: fadeAnimation }}>
-                            <LinearGradient
-                                style={styles.lineBlur}
-                                // colors={['rgba(245, 245, 245, 0.85)', 'rgba(255, 255, 255, 0.1)']}
-                                colors={['#f5f5f5', '#f5f5f5ee', '#f5f5f5dc', '#f5f5f57c', '#f5f5f521']}
-
-                                pointerEvents={'none'}
-                            />
-                        </Animated.View>
                         {/* : null
                     } */}
+
+                        <View style={{ position: 'relative' }}>
+
+                            <Animated.View style={{ ...styles.animateBox, opacity: fadeAnimation }}>
+                                <LinearGradient
+                                    style={styles.lineBlur}
+                                    // colors={['rgba(245, 245, 245, 0.85)', 'rgba(255, 255, 255, 0.1)']}
+                                    colors={['#f5f5f5', '#f5f5f5ee', '#f5f5f5dc', '#f5f5f57c', '#f5f5f521']}
+
+                                    pointerEvents={'none'}
+                                />
+                            </Animated.View>
+
+                        </View>
                         <ScrollView showsVerticalScrollIndicator={false} onMomentumScrollEnd={handelOnScroll} onScrollBeginDrag={() => fadeIn()} scrollEventThrottle={1} alwaysBounceVertical={true} horizontal={false}>
                             <View style={styles.boxCard}>
                                 {MenuData.map((data, idx) => {
@@ -90,6 +95,7 @@ export const IndexHome: React.FC<IndexHomeProps> = ({ navigation }: HomeStackNav
                                 })}
                             </View>
                         </ScrollView>
+
                     </View>
                     {/* <CardHome>
                 {tt}
@@ -118,6 +124,7 @@ const styles = StyleSheet.create({
 
     boxScroll: {
         // marginHorizontal: 20,
+        // position: 'relative',
         backgroundColor: '#f5f5f5',
         // backgroundColor: '#000',
         paddingTop: moderateScale(1),
@@ -127,7 +134,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 25,
     },
     boxCard: {
-
+        // position: 'relative',
         flexDirection: 'row',
         justifyContent: 'space-between',
         // alignContent: 'space-around',
@@ -148,8 +155,8 @@ const styles = StyleSheet.create({
     },
     animateBox: {
         position: 'absolute',
-        top: verticalScale(142),
-        left: '1%',
+        // top: '80%',
+        left: 0,
         width: '98%',
         zIndex: 2,
         // backgroundColor: 'blue',

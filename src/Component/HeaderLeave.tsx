@@ -46,7 +46,7 @@ export const HeaderLeave: React.FC<HeaderLeaveProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         height: verticalScale(45),
-        // marginTop: StatusBar.currentHeight,
+        paddingTop: StatusBar.currentHeight,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'flex-end',

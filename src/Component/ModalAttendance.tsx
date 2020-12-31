@@ -123,7 +123,7 @@ export const ModalAttendance: React.FC<ModalAttendanceProps> = ({ visible, setVi
                                 <View>
                                     <Text style={styles.fontTitleInfo}>
                                         Min Distance</Text>
-                                    <Text style={styles.fontSubInfo}>500 Meter</Text>
+                                    <Text style={styles.fontSubInfo}>100 Meter</Text>
                                 </View>
                             </View>
                             <View style={styles.boxBtn}>
@@ -137,7 +137,7 @@ export const ModalAttendance: React.FC<ModalAttendanceProps> = ({ visible, setVi
                                 <View>
                                     {distance !== null ?
                                         <>
-                                            {distance < 500 ?
+                                            {distance < 100 ?
                                                 <TouchableOpacity activeOpacity={0.6} style={styles.boxBtnPunchIn}>
                                                     <View>
                                                         <Text style={styles.fontBtnPunchIn}>{modePunch === 'punchIn' ? 'Punch In' : 'Punch Out'}</Text>

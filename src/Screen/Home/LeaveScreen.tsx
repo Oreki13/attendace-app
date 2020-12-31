@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Button, Dimensions, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { Center } from '../../Component/Center';
 import dayjs from 'dayjs'
 import { Calendar, CalendarList, DateObject } from 'react-native-calendars';
@@ -13,21 +13,31 @@ interface LeaveScreenProps {
 
 const { width, height } = Dimensions.get('window')
 
+const wait = (timeout) => {
+    return new Promise(resolve => {
+        setTimeout(resolve, timeout);
+    });
+}
 export const LeaveScreen: React.FC<LeaveScreenProps> = ({ }) => {
     // console.log(dayjs().add(1, 'M').format('MMMM YYYY'));
     const [tesDummy, setTesDummy] = useState([])
-    const [startDate, setStartDate] = useState<string | null>(null)
-    const [endDate, setEndDate] = useState<string | null>('')
-    const [language, setLanguage] = useState('eng')
+    const [startDate, setStartDate] = useState<string | number | Date | dayjs.Dayjs | undefined>(undefined)
+    const [endDate, setEndDate] = useState<string | number | Date | dayjs.Dayjs | undefined>(undefined)
+    const [tol, setToL] = useState<React.ReactText>('eng')
     const [reason, setReason] = useState('')
+    const [refreshing, setRefreshing] = React.useState(false);
 
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
 
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
 
     useEffect(() => {
         () => { }
         return () => {
-            setStartDate(null)
-            setEndDate(null)
+            setStartDate(undefined)
+            setEndDate(undefined)
             setTesDummy([])
 
         }
@@ -42,15 +52,15 @@ export const LeaveScreen: React.FC<LeaveScreenProps> = ({ }) => {
         if (startDate === day.dateString) {
             const tmp = JSON.parse(JSON.stringify([]))
             setTesDummy(tmp)
-            setStartDate(null)
-            setEndDate(null)
+            setStartDate(undefined)
+            setEndDate(undefined)
             return
         }
         if (different < 0) {
             tmp.push({ [day.dateString]: { startingDay: true, color: '#fecb00', textColor: 'black' } })
             setTesDummy(tmp)
             setStartDate(day.dateString)
-            setEndDate(null)
+            setEndDate(undefined)
             return
         }
         if (!startDate && !endDate) {
@@ -89,7 +99,7 @@ export const LeaveScreen: React.FC<LeaveScreenProps> = ({ }) => {
     }
 
     return (
-        <ScrollView style={{ backgroundColor: '#fff' }}>
+        <ScrollView style={{ backgroundColor: '#fff' }} >
             <View style={styles.containerCal}>
                 <View style={styles.calendar}>
                     <Calendar
@@ -133,11 +143,11 @@ export const LeaveScreen: React.FC<LeaveScreenProps> = ({ }) => {
                         <View style={styles.boxPicker}>
                             <Picker
 
-                                selectedValue={language}
-                                style={styles.picker}
+                                selectedValue={tol}
+                                // style={styles.picker}
                                 dropdownIconColor='black'
                                 onValueChange={(itemValue, itemIndex) =>
-                                    setLanguage(itemValue)
+                                    setToL(itemValue)
                                 }>
                                 <Picker.Item label="Capek" value="eng" />
                                 <Picker.Item label="Mager" value="js" />
@@ -175,7 +185,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#874469",
         // flex: 1,
         height: "100%",
-        paddingTop: moderateScale(10),
+        paddingTop: moderateScale(5),
         // paddingHorizontal: moderateScale(10)
     },
     calendar: {

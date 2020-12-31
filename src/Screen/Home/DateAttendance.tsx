@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import React, { useContext, useEffect, useState } from 'react'
-import { ActivityIndicator, Button, Dimensions, SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
+import { ActivityIndicator, Button, Dimensions, FlatList, RefreshControl, SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { log } from 'react-native-reanimated';
@@ -36,6 +36,11 @@ type dates = {
     month: string
 } | null | undefined
 const { width, height } = Dimensions.get('window')
+const wait = (timeout) => {
+    return new Promise(resolve => {
+        setTimeout(resolve, timeout);
+    });
+}
 export const DateAttendance: React.FC<DateAttendanceProps> = ({ navigation, route }) => {
     const { Attend } = useContext(DummyContext)
     const [myData, setMyData] = useState<dates>(null)
@@ -44,6 +49,12 @@ export const DateAttendance: React.FC<DateAttendanceProps> = ({ navigation, rout
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [loadingModal, setLoadingModal] = useState(true)
     const [modePunch, setModePunch] = useState<string | null>(null)
+    const [refreshing, setRefreshing] = React.useState(false);
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
     useEffect(() => {
 
         const filterert = Attend.filter((e) => e.month == route.name)
@@ -177,18 +188,24 @@ export const DateAttendance: React.FC<DateAttendanceProps> = ({ navigation, rout
                 <View style={styles.boxYesterday}>
 
                     <Text style={styles.fontYesterday}>Yesterday</Text>
-                    <ScrollView showsVerticalScrollIndicator={false}>
-                        {myData.yesterday.map((data, idx) => {
+                    <FlatList
+                        data={myData.yesterday}
+                        renderItem={(e) =>
+                            <YesterdayDate key={e.index} date={e.item.date} day={e.item.day} punchIn={e.item.punchIn} punchOut={e.item.punchOut} />
+                        }
+                        refreshControl={
+                            <RefreshControl refreshing={refreshing} enabled={true} onRefresh={onRefresh} />
+                        }
+
+                        showsVerticalScrollIndicator={false}
+                    />
+                    {/* {myData.yesterday.map((data, idx) => {
                             return (
 
                                 <YesterdayDate key={idx} date={data.date} day={data.day} punchIn={data.punchIn} punchOut={data.punchOut} />
                             )
-                        })}
-                        {/* <YesterdayDate />
-                    <YesterdayDate />
-                    <YesterdayDate />
-                    <YesterdayDate /> */}
-                    </ScrollView>
+                        })} */}
+
                 </View>
                 <ModalAttendance modePunch={modePunch} setModePunch={setModePunch} loadingModal={loadingModal} setLoadingModal={setLoadingModal} visible={visible} setVisible={setVisible} />
                 <ModalLoading visibleLoading={visibleLoading} setVisibleLoading={setVisibleLoading} />

@@ -17,6 +17,8 @@ import { AppTab } from './AppTab';
 import { CommingSoon } from '../../Screen/Home/CommingSoon';
 import { LeaveScreen } from '../../Screen/Home/LeaveScreen';
 import { HeaderLeave } from '../../Component/HeaderLeave';
+import { RequestScreen } from '../../Screen/Home/RequestScreen';
+import { NotifScreen } from '../../Screen/Home/NotifScreen';
 
 interface HomeStackProps {
     navigation: StackNavigationProp<HomeParamList, 'Date'>
@@ -79,9 +81,19 @@ export const HomeStack: React.FC<HomeStackProps> = ({ navigation }) => {
 
 
             }} name='Date' component={AttendentStack} />
-            <Stack.Screen name="Notification" component={CommingSoon} />
-            <Stack.Screen name="Request" component={CommingSoon} />
-            <Stack.Screen options={{ header: () => <HeaderLeave navigation={navigation} /> }} name="Leave" component={LeaveScreen} />
+            <Stack.Screen name="Notification" component={NotifScreen}
+                options={{
+                    headerTintColor: '#fff',
+                    headerStyle: { backgroundColor: '#874469', elevation: 0 },
+                }}
+            />
+            <Stack.Screen name="Request" component={RequestScreen} options={{
+                headerTintColor: '#fff',
+                headerStyle: { backgroundColor: '#874469', elevation: 0 },
+            }} />
+            <Stack.Screen options={{
+                header: () => <HeaderLeave navigation={navigation} />
+            }} name="Leave" component={LeaveScreen} />
             <Stack.Screen name="PaySlip" component={CommingSoon} />
             <Stack.Screen name="Report" component={CommingSoon} />
             {/* <Stack.Screen name='Maps' component={MapsScreen} /> */}
