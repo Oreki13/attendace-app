@@ -1,17 +1,15 @@
-import React, { useContext, useRef, useState } from 'react'
-import { Center } from '../../Component/Center';
-import { FontAwesome, Ionicons, Octicons } from '@expo/vector-icons';
-import { Dimensions, SafeAreaView, StyleSheet, Text, View, Animated } from 'react-native';
-import { CardHome } from '../../Component/CardHome';
-import { ScrollView } from 'react-native-gesture-handler';
-import { LinearGradient } from 'expo-linear-gradient';
-import { DetailHome } from '../../Component/DetailHome';
-import { HomeParamList, HomeStackNavProp } from '../../Router/ParamList/HomeParamList';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { LinearGradient } from 'expo-linear-gradient';
+import React, { useContext, useRef, useState } from 'react';
+import { Animated, Dimensions, StyleSheet, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { moderateScale } from 'react-native-size-matters';
+import { CardHome } from '../../Component/CardHome';
+import { Center } from '../../Component/Center';
+import { DetailHome } from '../../Component/DetailHome';
 import { DummyContext } from '../../Context/DummyData';
-import { HeaderHome } from '../../Component/HeaderHome';
-import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
+import { HomeParamList, HomeStackNavProp } from '../../Router/ParamList/HomeParamList';
 
 
 
@@ -115,7 +113,8 @@ const styles = StyleSheet.create({
         // position: 'absolute',
         // bottom: 0,
         width: width,
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
+        // borderBottomLeftRadius: 25
         // paddingHorizontal: 25,
         // paddingTop: 20,
         // borderTopLeftRadius: 25,
@@ -130,8 +129,8 @@ const styles = StyleSheet.create({
         paddingTop: moderateScale(1),
 
         justifyContent: 'center',
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
+        // borderTopLeftRadius: -10,
+        borderTopRightRadius: 49,
     },
     boxCard: {
         // position: 'relative',

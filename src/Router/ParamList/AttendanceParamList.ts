@@ -51,6 +51,10 @@ export type AttendanceParamList = {
         type: string | null,
         data: object | null
     } | undefined;
+    Leave: {
+        type: string | null,
+        data: object | null
+    } | undefined;
 }
 
 export type AttendanceStackNavProp<T extends keyof AttendanceParamList> = {

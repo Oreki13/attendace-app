@@ -11,7 +11,7 @@ export const CommingSoon: React.FC<CommingSoonProps> = ({ }) => {
         <Center>
             <Text>
                 Comming Soon Screen
-                </Text>
+            </Text>
         </Center>
     );
 }

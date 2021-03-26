@@ -1,4 +1,3 @@
-import { AttendanceParamList } from "./AttendanceParamList"
 
 export type IndexHomeParamList = {
     Index: undefined,
@@ -8,6 +7,6 @@ export type IndexHomeParamList = {
 export type RootStackIndexParamList = {
     Dashboard: undefined,
     CameraModal: {
-        prevScreen: "January" | "February" | "March" | "April" | "Mey" | "June" | "July" | "August" | "September" | "October" | "November" | "December"
+        prevScreen: "January" | "February" | "March" | "April" | "Mey" | "June" | "July" | "August" | "September" | "October" | "November" | "December" | "Leave"
     }
 }

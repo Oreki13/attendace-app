@@ -1,21 +1,16 @@
 import { RouteProp } from '@react-navigation/native';
-import React, { useContext, useEffect, useState } from 'react'
-import { ActivityIndicator, Button, Dimensions, FlatList, RefreshControl, SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
-import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { log } from 'react-native-reanimated';
-import { Center } from '../../Component/Center';
+import { StackNavigationProp } from '@react-navigation/stack';
+import * as Location from 'expo-location';
+import React, { useContext, useEffect, useState } from 'react';
+import { Dimensions, FlatList, RefreshControl, SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
+import { ModalAttendance } from '../../Component/ModalAttendance';
+import { ModalLoading } from '../../Component/ModalLoading';
 import { YesterdayDate } from '../../Component/YesterdayDate';
 import { DummyContext } from '../../Context/DummyData';
 import { AttendanceParamList } from '../../Router/ParamList/AttendanceParamList';
-import moment from 'moment'
-import { StackNavigationProp } from '@react-navigation/stack';
-import { HomeParamList } from '../../Router/ParamList/HomeParamList';
-import { IndexHomeParamList, RootStackIndexParamList } from '../../Router/ParamList/IndexHomeParamList';
-import { ModalAttendance } from '../../Component/ModalAttendance';
-import { ModalLoading } from '../../Component/ModalLoading';
-import * as Location from 'expo-location';
-import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
+import { RootStackIndexParamList } from '../../Router/ParamList/IndexHomeParamList';
 
 
 interface DateAttendanceProps {

@@ -1,12 +1,9 @@
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import React from 'react'
-import { StatusBar } from 'react-native';
+import React from 'react';
 import { CameraHome } from '../../Component/Camera';
-import { CommingSoon } from '../../Screen/Home/CommingSoon';
 import { MapsScreen } from '../../Screen/Home/MapsScreen';
 import { IndexHomeParamList, RootStackIndexParamList } from '../ParamList/IndexHomeParamList';
 import { AppTab } from './AppTab';
-import { HomeStack } from './HomeStack';
 
 interface IndexProps {
 

@@ -1,9 +1,7 @@
-import React, { useState } from 'react'
-import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react';
+import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import { CardNotification } from '../../Component/CardNotification';
-import { CardRequest } from '../../Component/CardRequest';
-import { Center } from '../../Component/Center';
 
 interface NotifScreenProps {
 
@@ -64,20 +62,6 @@ export const NotifScreen: React.FC<NotifScreenProps> = ({ }) => {
         <View style={styles.cover1}>
             <View style={styles.cover2}>
                 <View style={styles.container}>
-                    {/* <ScrollView
-                        refreshControl={
-                            <RefreshControl refreshing={refreshing} enabled={true} onRefresh={onRefresh} />
-                        }
-                        horizontal={false}
-                        onScrollBeginDrag={(e) => {
-                            if(e.nativeEvent.contentOffset.y === 0){
-                                setSEnable(true)
-                         }}
-                        }
-                        scrollEnabled={sEnable}
-                        
-                    >
-                    </ScrollView> */}
                     <FlatList
                         data={data}
                         renderItem={(d) =>

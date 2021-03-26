@@ -1,6 +1,5 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { AuthParamList } from "./AuthParamList";
 
 export type HomeParamList = {
     HomeScreen: undefined;
@@ -13,7 +12,9 @@ export type HomeParamList = {
     Maps: undefined,
     Notification: undefined,
     Request: undefined,
-    Leave: undefined,
+    Leave: {
+        data: object | null
+    } | undefined,
     PaySlip: undefined,
     Report: undefined
 

@@ -84,7 +84,7 @@ const dataMenu: data = [
 ]
 
 const dataAttends: dates = [{
-    month: 'December',
+    month: 'January',
     today: { punchIn: '9:30', punchOut: '16:29' },
     yesterday: [
         {
@@ -120,7 +120,7 @@ const dataAttends: dates = [{
     ],
 },
 {
-    month: 'November',
+    month: 'February',
     today: { punchIn: '9:30', punchOut: null },
     yesterday: [
         {
@@ -156,7 +156,7 @@ const dataAttends: dates = [{
     ],
 },
 {
-    month: 'October',
+    month: 'March',
     today: null,
     yesterday: [
         {

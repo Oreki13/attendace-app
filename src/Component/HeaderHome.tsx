@@ -1,6 +1,6 @@
 import { FontAwesome5 } from '@expo/vector-icons';
 import React, { useContext } from 'react';
-import { Dimensions, SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { AuthContext } from '../Context/AuthProvider';
@@ -8,7 +8,7 @@ import { AuthContext } from '../Context/AuthProvider';
 interface HeaderHomeProps {
 
 }
-const { width, height } = Dimensions.get('window')
+
 export const HeaderHome: React.FC<HeaderHomeProps> = ({ }) => {
     const { logout } = useContext(AuthContext)
     return (
@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 25,
         paddingTop: moderateScale(12),
         backgroundColor: '#874469',
+        borderBottomLeftRadius: 49
 
     },
     textWlcb: {

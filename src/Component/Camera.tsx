@@ -48,7 +48,6 @@ export const CameraHome: React.FC<CameraProps> = ({ navigation, route }) => {
 
             })
             if (poto) {
-                console.log(poto);
                 setLoadingTake(false)
                 setThePhoto(poto)
                 setPreview(true)
@@ -65,6 +64,7 @@ export const CameraHome: React.FC<CameraProps> = ({ navigation, route }) => {
     const doneTake = () => {
         const dataPhoto = {
             base64: thePhoto?.base64
+
         }
         navigation.navigate(route.params.prevScreen, { type: 'poto', data: dataPhoto })
     }

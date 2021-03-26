@@ -1,14 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Dimensions, RefreshControl, StyleSheet, Text, View } from 'react-native';
-import { Center } from '../../Component/Center';
-import dayjs from 'dayjs'
-import { Calendar, CalendarList, DateObject } from 'react-native-calendars';
-import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
-import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import BottomSheet from '@gorhom/bottom-sheet';
 import { Picker } from '@react-native-picker/picker';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import dayjs from 'dayjs';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Calendar, DateObject } from 'react-native-calendars';
+import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import { moderateScale, scale } from 'react-native-size-matters';
+import { HomeParamList } from '../../Router/ParamList/HomeParamList';
+import { RootStackIndexParamList } from '../../Router/ParamList/IndexHomeParamList';
 
 interface LeaveScreenProps {
-
+    navigation: StackNavigationProp<RootStackIndexParamList, 'Dashboard'>
+    route: RouteProp<HomeParamList, 'Leave'>
 }
 
 const { width, height } = Dimensions.get('window')
@@ -18,7 +23,7 @@ const wait = (timeout) => {
         setTimeout(resolve, timeout);
     });
 }
-export const LeaveScreen: React.FC<LeaveScreenProps> = ({ }) => {
+export const LeaveScreen: React.FC<LeaveScreenProps> = ({ navigation, route }) => {
     // console.log(dayjs().add(1, 'M').format('MMMM YYYY'));
     const [tesDummy, setTesDummy] = useState([])
     const [startDate, setStartDate] = useState<string | number | Date | dayjs.Dayjs | undefined>(undefined)
@@ -26,10 +31,16 @@ export const LeaveScreen: React.FC<LeaveScreenProps> = ({ }) => {
     const [tol, setToL] = useState<React.ReactText>('eng')
     const [reason, setReason] = useState('')
     const [refreshing, setRefreshing] = React.useState(false);
+    const bottomSheetRef = useRef<BottomSheet>(null);
+
+    const snapPoints = useMemo(() => ['45%', '90%'], []);
+
+    const handleSheetChanges = useCallback((index: number) => {
+        console.log('handleSheetChanges', index);
+    }, []);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-
         wait(2000).then(() => setRefreshing(false));
     }, []);
 
@@ -97,46 +108,53 @@ export const LeaveScreen: React.FC<LeaveScreenProps> = ({ }) => {
         }
         setTesDummy(tmp)
     }
+    console.log(route.params.data);
 
     return (
-        <ScrollView style={{ backgroundColor: '#fff' }} >
-            <View style={styles.containerCal}>
-                <View style={styles.calendar}>
-                    <Calendar
-                        // key={endDate}
-                        // horizontal={true}
-                        // pagingEnabled={true}
-                        onDayPress={(day) => { onDayClick(day) }}
-                        theme={{
-                            backgroundColor: '#874469',
-                            calendarBackground: '#874469',
-                            monthTextColor: '#e5e5e5',
-                            arrowColor: '#fecb00',
-                            todayTextColor: '#fecb00',
-                            textDisabledColor: '#272727',
-                            dayTextColor: '#e5e5e5',
-                            textSectionTitleColor: '#e5e5e5',
-                            selectedDayBackgroundColor: 'green',
-                            'stylesheet.day.period': {
-                                base: {
-                                    alignItems: "center",
-                                    height: 34,
-                                    overflow: "hidden",
-                                    width: 38,
-                                },
+        // <ScrollView style={{ backgroundColor: '#000' }} >
+        <View style={styles.containerCal}>
+            <View style={styles.calendar}>
+                <Calendar
+                    // key={endDate}
+                    // horizontal={true}
+                    // pagingEnabled={true}
+                    onDayPress={(day) => { onDayClick(day) }}
+                    theme={{
+                        backgroundColor: '#874469',
+                        calendarBackground: '#874469',
+                        monthTextColor: '#e5e5e5',
+                        arrowColor: '#fecb00',
+                        todayTextColor: '#fecb00',
+                        textDisabledColor: '#272727',
+                        dayTextColor: '#e5e5e5',
+                        textSectionTitleColor: '#e5e5e5',
+                        selectedDayBackgroundColor: 'green',
+                        'stylesheet.day.period': {
+                            base: {
+                                alignItems: "center",
+                                height: 34,
+                                overflow: "hidden",
+                                width: 38,
                             },
-                        }}
-                        minDate={dayjs().format('YYYY-MM-DD')}
-                        maxDate={dayjs().add(3, 'M').format('YYYY-MM-DD')}
-                        markedDates={tesDummy[0]}
-                        markingType={'period'}
-                    // calendarWidth={scale(330)}
-                    // scrollEnabled={true}
+                        },
+                    }}
+                    minDate={dayjs().format('YYYY-MM-DD')}
+                    maxDate={dayjs().add(3, 'M').format('YYYY-MM-DD')}
+                    markedDates={tesDummy[0]}
+                    markingType={'period'}
+                // calendarWidth={scale(330)}
+                // scrollEnabled={true}
 
 
 
-                    />
-                </View>
+                />
+            </View>
+            <BottomSheet
+                ref={bottomSheetRef}
+                index={0}
+                snapPoints={snapPoints}
+                onChange={handleSheetChanges}
+            >
                 <View style={styles.containerForm}>
                     <View style={styles.boxTof}>
                         <Text style={styles.inpTof}>Types Of Left</Text>
@@ -149,17 +167,28 @@ export const LeaveScreen: React.FC<LeaveScreenProps> = ({ }) => {
                                 onValueChange={(itemValue, itemIndex) =>
                                     setToL(itemValue)
                                 }>
-                                <Picker.Item label="Capek" value="eng" />
-                                <Picker.Item label="Mager" value="js" />
-                                <Picker.Item label="Males" value="js2" />
-                                <Picker.Item label="Tidur" value="js3" />
+                                <Picker.Item label="Sakit" value="sakit" />
+                                <Picker.Item label="Urusan Keluarga" value="urusan keluarga" />
+                                <Picker.Item label="Menikah" value="menikah" />
+
                             </Picker>
                         </View>
                     </View>
+                    <View style={styles.boxTof}>
+                        <Text style={styles.inpTof}>Document</Text>
+                        <View style={styles.boxDocument}>
+                            <TouchableOpacity style={styles.boxBtn} onPress={() => navigation.navigate('CameraModal', { prevScreen: 'Leave' })}>
+                                <Text style={{ color: 'white' }}>Upload Document</Text>
+                            </TouchableOpacity>
+                            <View style={styles.boxNameFile}>
+                                <Text>{route.params.data ? "Have 1 File" : null}</Text>
+                            </View>
+                        </View>
+                    </View>
                     <View style={styles.boxReason}>
-                        <Text style={styles.inpReason}>Reaseon</Text>
+                        <Text style={styles.inpReason}>Reason</Text>
                         <TextInput
-                            placeholder='Type Your Reason HEREE!!!'
+                            placeholder='Type Your Reason Here'
                             style={styles.textInp}
                             onChangeText={(e) => setReason(e)}
                             numberOfLines={5}
@@ -168,11 +197,12 @@ export const LeaveScreen: React.FC<LeaveScreenProps> = ({ }) => {
                             value={reason} />
                     </View>
                     <TouchableOpacity activeOpacity={0.8} style={styles.btnLeave}>
-                        <Text style={styles.fontBtn}>Apply for Leave</Text>
+                        <Text style={styles.fontBtn}>Apply</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
-        </ScrollView>
+            </BottomSheet>
+        </View>
+        // </ScrollView>
 
 
 
@@ -192,7 +222,7 @@ const styles = StyleSheet.create({
         height: scale(330)
     },
     containerForm: {
-        height: scale(270),
+        // height: scale(270),
         backgroundColor: '#fff',
         borderTopLeftRadius: moderateScale(20),
         borderTopRightRadius: moderateScale(20),
@@ -232,5 +262,17 @@ const styles = StyleSheet.create({
         fontSize: moderateScale(15),
         color: '#fff',
         textAlign: 'center'
+    },
+    boxDocument: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    boxBtn: {
+        backgroundColor: '#874469',
+        padding: 10,
+        borderRadius: 5
+    },
+    boxNameFile: {
+        marginLeft: 10
     }
 })
